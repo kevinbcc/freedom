@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上班日倒數 ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8E8 50%, #FFF0E6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(255, 182, 193, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 28px;
+            color: #FF9AA2;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #FFB7B2;
+            opacity: 0.8;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin: 30px auto;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: #FFE5E5;
+            stroke-width: 12;
+        }
+
+        .progress-ring-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .days-remaining {
+            font-size: 64px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF9AA2, #FFB7B2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .days-label {
+            font-size: 16px;
+            color: #FFDAC1;
+            font-weight: 500;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #FFF5F7, #FFE8E8);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 182, 193, 0.2);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FFB7B2;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #FFDAC1;
+            opacity: 0.9;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF9AA2, #FFB7B2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 154, 162, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 154, 162, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #FFB7B2;
+            border: 2px solid #FFE5E5;
+        }
+
+        .btn-secondary:hover {
+            background: #FFF5F7;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .reset-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-reset {
+            background: #FFDAC1;
+            color: #FF9AA2;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-reset:hover {
+            background: #FFB7B2;
+            color: white;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #FFF5F7, #FFE8E8);
+            color: #FF9AA2;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .celebration {
+            font-size: 48px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+            animation: bounce 0.6s ease;
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .progress-ring {
+                width: 200px;
+                height: 200px;
+            }
+
+            .days-remaining {
+                font-size: 52px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🌸 上班日倒數 🌸</div>
+            <div class="subtitle">一天一天都在進步中 ✨</div>
+        </div>
+
+        <div class="progress-ring">
+            <svg width="240" height="240">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FF9AA2;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFB7B2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle class="progress-ring-circle" cx="120" cy="120" r="100"/>
+                <circle class="progress-ring-progress" cx="120" cy="120" r="100" id="progress"/>
+            </svg>
+            <div class="progress-content">
+                <div class="days-remaining" id="daysRemaining">100</div>
+                <div class="days-label">天</div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalDays">100</div>
+                <div class="stat-label">總天數</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completedDays">0</div>
+                <div class="stat-label">已完成</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-secondary" id="decreaseBtn">
+                <span>−</span> 退一天
+            </button>
+            <button class="btn btn-primary" id="increaseBtn">
+                <span>✓</span> 完成一天
+            </button>
+        </div>
+
+        <div class="celebration" id="celebration">🎉</div>
+        <div class="message" id="message"></div>
+
+        <div class="reset-section">
+            <button class="btn-reset" id="resetBtn">重新設定</button>
+        </div>
+    </div>
+
+    <script>
+        let totalDays = 100;
+        let remainingDays = 100;
+
+        // 從記憶體載入資料
+        function loadData() {
+            const saved = {
+                total: totalDays,
+                remaining: remainingDays
+            };
+            totalDays = saved.total;
+            remainingDays = saved.remaining;
+        }
+
+        // 儲存資料到記憶體
+        function saveData() {
+            // 資料保存在記憶體變數中
+        }
+
+        // 更新介面
+        function updateUI() {
+            const completedDays = totalDays - remainingDays;
+            const percentage = ((totalDays - remainingDays) / totalDays) * 100;
+            
+            document.getElementById('daysRemaining').textContent = remainingDays;
+            document.getElementById('totalDays').textContent = totalDays;
+            document.getElementById('completedDays').textContent = completedDays;
+            
+            // 更新進度環
+            const circle = document.getElementById('progress');
+            const radius = 100;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = offset;
+
+            saveData();
+        }
+
+        // 顯示訊息
+        function showMessage(text) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.classList.add('show');
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 2000);
+        }
+
+        // 顯示慶祝動畫
+        function showCelebration() {
+            const celebrationEl = document.getElementById('celebration');
+            celebrationEl.classList.add('show');
+            setTimeout(() => {
+                celebrationEl.classList.remove('show');
+            }, 600);
+        }
+
+        // 增加一天
+        document.getElementById('increaseBtn').addEventListener('click', () => {
+            if (remainingDays > 0) {
+                remainingDays--;
+                updateUI();
+                
+                if (remainingDays === 0) {
+                    showCelebration();
+                    showMessage('🎊 恭喜！你完成所有上班日了！');
+                } else if (remainingDays <= 10) {
+                    showMessage(`💪 加油！只剩 ${remainingDays} 天了！`);
+                } else {
+                    showMessage('太棒了！又完成一天 ✨');
+                }
+            } else {
+                showMessage('已經完成所有天數囉！🎉');
+            }
+        });
+
+        // 減少一天
+        document.getElementById('decreaseBtn').addEventListener('click', () => {
+            if (remainingDays < totalDays) {
+                remainingDays++;
+                updateUI();
+                showMessage('已退回一天 ↩️');
+            } else {
+                showMessage('已經是初始狀態囉！');
+            }
+        });
+
+        // 重新設定
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (confirm('確定要重新設定嗎？目前的進度將會清除。')) {
+                const newTotal = prompt('請輸入新的總天數：', totalDays);
+                if (newTotal !== null && newTotal.trim() !== '' && !isNaN(newTotal) && parseInt(newTotal) > 0) {
+                    totalDays = parseInt(newTotal);
+                    remainingDays = totalDays;
+                    updateUI();
+                    showMessage('已重新設定！加油 💪');
+                }
+            }
+        });
+
+        // 初始化
+        loadData();
+        updateUI();
+    </script>
+</body>
+</html>
