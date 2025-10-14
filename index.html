@@ -2,8 +2,12 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>上班日倒數 ✨</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#FFF5F7">
     <style>
         * {
             margin: 0;
@@ -20,6 +24,7 @@
             align-items: center;
             padding: 15px;
             overflow-x: hidden;
+            overscroll-behavior: none;
         }
 
         .container {
@@ -356,6 +361,10 @@
     </div>
 
     <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
         let totalDays = 100;
         let remainingDays = 100;
 
@@ -463,6 +472,22 @@
         // 初始化
         loadData();
         updateUI();
+
+        // 防止自動滾動
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 0);
+        });
+
+        // PWA 服務工作者註冊
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
     </script>
 </body>
 </html>
