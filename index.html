@@ -359,19 +359,22 @@
         let totalDays = 100;
         let remainingDays = 100;
 
-        // 從記憶體載入資料
+        // 從 localStorage 載入資料
         function loadData() {
-            const saved = {
-                total: totalDays,
-                remaining: remainingDays
-            };
-            totalDays = saved.total;
-            remainingDays = saved.remaining;
+            const savedTotal = localStorage.getItem('totalDays');
+            const savedRemaining = localStorage.getItem('remainingDays');
+            if (savedTotal && !isNaN(parseInt(savedTotal))) {
+                totalDays = parseInt(savedTotal);
+            }
+            if (savedRemaining && !isNaN(parseInt(savedRemaining))) {
+                remainingDays = parseInt(savedRemaining);
+            }
         }
 
-        // 儲存資料到記憶體
+        // 儲存資料到 localStorage
         function saveData() {
-            // 資料保存在記憶體變數中
+            localStorage.setItem('totalDays', totalDays);
+            localStorage.setItem('remainingDays', remainingDays);
         }
 
         // 更新介面
