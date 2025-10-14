@@ -18,58 +18,62 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
+            overflow-x: hidden;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
-            padding: 40px 30px;
+            padding: 30px 20px;
             max-width: 500px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(255, 182, 193, 0.3);
             backdrop-filter: blur(10px);
+            margin: auto;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .title {
-            font-size: 28px;
+            font-size: 24px;
             color: #FF9AA2;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: #FFB7B2;
             opacity: 0.8;
         }
 
         .progress-ring {
             position: relative;
-            width: 240px;
-            height: 240px;
-            margin: 30px auto;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
         }
 
         .progress-ring svg {
             transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
         }
 
         .progress-ring-circle {
             fill: none;
             stroke: #FFE5E5;
-            stroke-width: 12;
+            stroke-width: 10;
         }
 
         .progress-ring-progress {
             fill: none;
             stroke: url(#gradient);
-            stroke-width: 12;
+            stroke-width: 10;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.5s ease;
         }
@@ -81,14 +85,10 @@
             transform: translate(-50%, -50%);
             text-align: center;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
 
         .days-remaining {
-            font-size: 64px;
+            font-size: 56px;
             font-weight: 700;
             background: linear-gradient(135deg, #FF9AA2, #FFB7B2);
             -webkit-background-clip: text;
@@ -99,7 +99,7 @@
         }
 
         .days-label {
-            font-size: 16px;
+            font-size: 15px;
             color: #FFDAC1;
             font-weight: 500;
         }
@@ -107,27 +107,27 @@
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 25px 0;
+            gap: 12px;
+            margin: 20px 0;
         }
 
         .stat-card {
             background: linear-gradient(135deg, #FFF5F7, #FFE8E8);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 18px 15px;
             text-align: center;
             border: 2px solid rgba(255, 182, 193, 0.2);
         }
 
         .stat-value {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #FFB7B2;
             margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 13px;
+            font-size: 12px;
             color: #FF9AA2;
             opacity: 1;
             font-weight: 500;
@@ -135,23 +135,23 @@
 
         .button-group {
             display: flex;
-            gap: 15px;
-            margin: 25px 0;
+            gap: 12px;
+            margin: 20px 0;
         }
 
         .btn {
             flex: 1;
-            padding: 18px;
+            padding: 16px 12px;
             border: none;
-            border-radius: 20px;
-            font-size: 18px;
+            border-radius: 18px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-primary {
@@ -181,14 +181,14 @@
         }
 
         .reset-section {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
         }
 
         .btn-reset {
             background: #FFDAC1;
             color: #FF9AA2;
-            padding: 12px 30px;
+            padding: 12px 28px;
             border: none;
             border-radius: 15px;
             font-size: 14px;
@@ -248,30 +248,57 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
-                padding: 30px 20px;
+                padding: 25px 18px;
+                border-radius: 25px;
             }
 
             .title {
-                font-size: 24px;
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 12px;
             }
 
             .progress-ring {
-                width: 200px;
-                height: 200px;
+                width: 180px;
+                height: 180px;
+                margin: 15px auto;
             }
 
             .days-remaining {
-                font-size: 52px;
+                font-size: 48px;
+            }
+
+            .days-label {
+                font-size: 14px;
+            }
+
+            .stat-card {
+                padding: 15px 12px;
             }
 
             .stat-value {
                 font-size: 24px;
             }
 
+            .stat-label {
+                font-size: 11px;
+            }
+
             .btn {
-                padding: 15px;
-                font-size: 16px;
+                padding: 14px 10px;
+                font-size: 15px;
+            }
+
+            .btn-reset {
+                padding: 11px 24px;
+                font-size: 13px;
             }
         }
     </style>
@@ -284,15 +311,15 @@
         </div>
 
         <div class="progress-ring">
-            <svg width="240" height="240">
+            <svg viewBox="0 0 200 200">
                 <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#FF9AA2;stop-opacity:1" />
                         <stop offset="100%" style="stop-color:#FFB7B2;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <circle class="progress-ring-circle" cx="120" cy="120" r="100"/>
-                <circle class="progress-ring-progress" cx="120" cy="120" r="100" id="progress"/>
+                <circle class="progress-ring-circle" cx="100" cy="100" r="85"/>
+                <circle class="progress-ring-progress" cx="100" cy="100" r="85" id="progress"/>
             </svg>
             <div class="progress-content">
                 <div class="days-remaining" id="daysRemaining">100</div>
@@ -358,7 +385,7 @@
             
             // 更新進度環
             const circle = document.getElementById('progress');
-            const radius = 100;
+            const radius = 85;
             const circumference = 2 * Math.PI * radius;
             const offset = circumference - (percentage / 100) * circumference;
             
