@@ -19,6 +19,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* ✨ 新增以下三行，優化觸控與點擊體驗 */
+            user-select: none; /* 防止文字被選取 */
+            -webkit-user-select: none; /* 兼容舊版 Safari/Chrome */
+            -webkit-tap-highlight-color: transparent; /* 移除行動裝置點擊高亮效果 */
+            touch-action: manipulation; /* 禁用雙擊縮放 */
         }
 
         html, body {
