@@ -207,7 +207,7 @@
         function updateUI() {
             if (state.remainingDays === 0 && (state.totalDays > 0)) {
                 dom.mainContent.classList.add('hide'); dom.celebrationScreen.classList.add('show');
-                dom.celebrationSubtitle.textContent = `您堅持了 ${state.totalDays} 天，完成了「${state.goalName}」的挑戰！`;
+                dom.celebrationSubtitle.textContent = `寶寶堅持了 ${state.totalDays} 天，完成了「${state.goalName}」的挑戰！`;
             } else { dom.mainContent.classList.remove('hide'); dom.celebrationScreen.classList.remove('show'); }
             const completedDays = state.totalDays - state.remainingDays;
             const percentage = state.totalDays > 0 ? (completedDays / state.totalDays) * 100 : 0;
