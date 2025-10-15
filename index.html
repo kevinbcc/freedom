@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>上班日倒數 ✨</title>
+    <title>目標倒數 ✨</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#FFF5F7">
     <style>
+        :root {
+            --theme-primary: #FF9AA2;
+            --theme-secondary: #FFB7B2;
+            --theme-light: #FFF5F7;
+            --theme-background: linear-gradient(135deg, #FFF5F7 0%, #FFE8E8 50%, #FFF0E6 100%);
+        }
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +28,7 @@
 
         body {
             font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8E8 50%, #FFF0E6 100%);
+            background: var(--theme-background);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,6 +47,8 @@
             margin: auto;
             max-height: 100%;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -50,15 +58,16 @@
 
         .title {
             font-size: 24px;
-            color: #FF9AA2;
+            color: var(--theme-primary);
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .subtitle {
             font-size: 13px;
-            color: #FFB7B2;
+            color: #FF8A8F;
             opacity: 0.8;
+            min-height: 1.2em;
         }
 
         .progress-ring {
@@ -85,7 +94,7 @@
             stroke: url(#gradient);
             stroke-width: 10;
             stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
+            transition: stroke-dashoffset 0.5s ease-in-out;
         }
 
         .progress-content {
@@ -97,10 +106,19 @@
             width: 100%;
         }
 
+        .days-remaining, .stat-value {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .animate-pop {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+        
         .days-remaining {
             font-size: 56px;
             font-weight: 700;
-            background: linear-gradient(135deg, #FF9AA2, #FFB7B2);
+            background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -110,7 +128,7 @@
 
         .days-label {
             font-size: 15px;
-            color: #FFDAC1;
+            color: var(--theme-primary);
             font-weight: 500;
         }
 
@@ -122,7 +140,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #FFF5F7, #FFE8E8);
+            background: linear-gradient(135deg, var(--theme-light), #FFE8E8);
             border-radius: 18px;
             padding: 18px 15px;
             text-align: center;
@@ -132,13 +150,13 @@
         .stat-value {
             font-size: 26px;
             font-weight: 700;
-            color: #FFB7B2;
+            color: var(--theme-secondary);
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 12px;
-            color: #FF9AA2;
+            color: var(--theme-primary);
             opacity: 1;
             font-weight: 500;
         }
@@ -150,54 +168,46 @@
         }
 
         .btn {
-            flex: 1;
-            padding: 16px 12px;
-            border: none;
-            border-radius: 18px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            flex: 1; padding: 16px 12px; border: none; border-radius: 18px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #FF9AA2, #FFB7B2);
+            background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
             color: white;
             box-shadow: 0 8px 20px rgba(255, 154, 162, 0.3);
         }
-
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 12px 30px rgba(255, 154, 162, 0.4);
         }
 
         .btn-secondary {
             background: white;
-            color: #FFB7B2;
+            color: var(--theme-secondary);
             border: 2px solid #FFE5E5;
         }
-
-        .btn-secondary:hover {
-            background: #FFF5F7;
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--theme-light);
             transform: translateY(-2px);
         }
-
-        .btn:active {
-            transform: translateY(0);
-        }
+        
+        .btn:active:not(:disabled) { transform: translateY(0); }
 
         .reset-section {
-            margin-top: 15px;
+            margin-top: auto;
             text-align: center;
         }
 
         .btn-reset {
-            background: #FFDAC1;
-            color: #FF9AA2;
+            background: none;
+            color: var(--theme-primary);
             padding: 12px 28px;
             border: none;
             border-radius: 15px;
@@ -206,173 +216,139 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .btn-reset:hover {
-            background: #FFB7B2;
-            color: white;
+            background: #FFDAC1;
         }
+        
+        .message { text-align: center; margin-top: 20px; padding: 15px; border-radius: 15px; background: linear-gradient(135deg, var(--theme-light), #FFE8E8); color: var(--theme-primary); font-size: 14px; font-weight: 500; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease; display: none; }
+        .message.show { opacity: 1; transform: translateY(0); display: block; }
+        .celebration { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; pointer-events: none; overflow: hidden; z-index: 10; }
+        .celebration.show { display: block; }
+        .confetti-piece { position: absolute; width: 10px; height: 20px; opacity: 0.9; animation: confetti-fall linear forwards; background-color: var(--confetti-color); will-change: transform; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        @keyframes confetti-fall { 0% { transform: translateY(-100%) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(var(--rotation)); opacity: 0; } }
 
-        .message {
-            text-align: center;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #FFF5F7, #FFE8E8);
-            color: #FF9AA2;
-            font-size: 14px;
-            font-weight: 500;
-            display: none;
-        }
-
-        .message.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .celebration {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
             pointer-events: none;
-            overflow: hidden;
-            z-index: 10;
+            transition: opacity 0.3s ease;
         }
-
-        .celebration.show {
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-title {
+            font-size: 20px;
+            color: var(--theme-primary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
             display: block;
+            font-size: 14px;
+            color: var(--theme-secondary);
+            margin-bottom: 8px;
         }
-
-        .confetti-piece {
-            position: absolute;
-            width: 10px;
-            height: 20px;
-            opacity: 0.9;
-            animation: confetti-fall linear forwards;
-            background-color: var(--confetti-color);
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #FFE5E5;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
         }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100%) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0.8;
-            }
+        .form-group input:focus {
+            border-color: var(--theme-primary);
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 25px 18px;
-                border-radius: 25px;
-            }
-
-            .title {
-                font-size: 22px;
-            }
-
-            .subtitle {
-                font-size: 12px;
-            }
-
-            .progress-ring {
-                width: 180px;
-                height: 180px;
-                margin: 15px auto;
-            }
-
-            .days-remaining {
-                font-size: 48px;
-            }
-
-            .days-label {
-                font-size: 14px;
-            }
-
-            .stat-card {
-                padding: 15px 12px;
-            }
-
-            .stat-value {
-                font-size: 24px;
-            }
-
-            .stat-label {
-                font-size: 11px;
-            }
-
-            .btn {
-                padding: 14px 10px;
-                font-size: 15px;
-            }
-
-            .btn-reset {
-                padding: 11px 24px;
-                font-size: 13px;
-            }
+            body { padding: 10px; }
+            .container { padding: 25px 18px; border-radius: 25px; }
+            .title { font-size: 22px; }
+            .subtitle { font-size: 12px; }
+            .progress-ring { width: 180px; height: 180px; margin: 15px auto; }
+            .days-remaining { font-size: 48px; }
+            .days-label { font-size: 14px; }
+            .stat-card { padding: 15px 12px; }
+            .stat-value { font-size: 24px; }
+            .stat-label { font-size: 11px; }
+            .btn { padding: 14px 10px; font-size: 15px; }
+            .btn-reset { padding: 11px 24px; font-size: 13px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="title">🌸 上班日倒數 🌸</div>
-            <div class="subtitle">一天一天都在進步中 ✨</div>
+            <div class="title" id="goalTitle">🌸 目標倒數 🌸</div>
+            <div class="subtitle" id="goalSubtitle">為自己設定一個目標吧！</div>
         </div>
 
-        <div class="progress-ring">
+        <div class="progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <svg viewBox="0 0 200 200">
                 <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#FF9AA2;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#FFB7B2;stop-opacity:1" />
+                        <stop offset="0%" style="stop-color:var(--theme-primary);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--theme-secondary);stop-opacity:1" />
                     </linearGradient>
                 </defs>
                 <circle class="progress-ring-circle" cx="100" cy="100" r="85"/>
                 <circle class="progress-ring-progress" cx="100" cy="100" r="85" id="progress"/>
             </svg>
             <div class="progress-content">
-                <div class="days-remaining" id="daysRemaining">100</div>
+                <div class="days-remaining" id="daysRemaining">...</div>
                 <div class="days-label">天</div>
             </div>
         </div>
 
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-value" id="totalDays">100</div>
+                <div class="stat-value" id="totalDays">...</div>
                 <div class="stat-label">總天數</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="completedDays">0</div>
+                <div class="stat-value" id="completedDays">...</div>
                 <div class="stat-label">已完成</div>
             </div>
         </div>
 
         <div class="button-group">
             <button class="btn btn-secondary" id="decreaseBtn">
-                <span>−</span> 退一天
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12H3"></path></svg>
+                退一天
             </button>
             <button class="btn btn-primary" id="increaseBtn">
-                <span>✓</span> 完成一天
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                完成一天
             </button>
         </div>
 
@@ -380,161 +356,212 @@
         <div class="message" id="message"></div>
 
         <div class="reset-section">
-            <button class="btn-reset" id="resetBtn">重新設定</button>
+            <button class="btn-reset" id="resetBtn">設定新目標</button>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-title">設定你的新目標</div>
+            <div class="form-group">
+                <label for="goalNameInput">目標名稱</label>
+                <input type="text" id="goalNameInput" placeholder="例如：PMP 考試倒數">
+            </div>
+            <div class="form-group">
+                <label for="totalDaysInput">總共天數</label>
+                <input type="number" id="totalDaysInput" placeholder="例如：30" min="1">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="cancelSettingsBtn">取消</button>
+                <button class="btn btn-primary" id="saveSettingsBtn">儲存目標</button>
+            </div>
         </div>
     </div>
 
     <script>
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
-        }
+        const dom = {
+            goalTitle: document.getElementById('goalTitle'),
+            goalSubtitle: document.getElementById('goalSubtitle'),
+            daysRemaining: document.getElementById('daysRemaining'),
+            totalDays: document.getElementById('totalDays'),
+            completedDays: document.getElementById('completedDays'),
+            progress: document.getElementById('progress'),
+            increaseBtn: document.getElementById('increaseBtn'),
+            decreaseBtn: document.getElementById('decreaseBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            message: document.getElementById('message'),
+            celebration: document.getElementById('celebration'),
+            progressRing: document.querySelector('.progress-ring'),
+            settingsModal: document.getElementById('settingsModal'),
+            goalNameInput: document.getElementById('goalNameInput'),
+            totalDaysInput: document.getElementById('totalDaysInput'),
+            saveSettingsBtn: document.getElementById('saveSettingsBtn'),
+            cancelSettingsBtn: document.getElementById('cancelSettingsBtn')
+        };
 
-        let totalDays = 100;
-        let remainingDays = 100;
+        const state = {
+            goalName: '🌸 目標倒數 🌸',
+            totalDays: 30,
+            remainingDays: 30
+        };
 
-        // 從 localStorage 載入資料
+        const motivationalQuotes = [
+            "一天一天都在進步中 ✨",
+            "堅持是通往成功最快的捷徑。",
+            "今天的你，比昨天更棒了！",
+            "別忘了休息，是為了走更長遠的路。",
+            "專注於過程，結果自然會來。",
+            "相信自己，你遠比想像中更強大。"
+        ];
+
         function loadData() {
-            const savedTotal = localStorage.getItem('totalDays');
-            const savedRemaining = localStorage.getItem('remainingDays');
-            if (savedTotal && !isNaN(parseInt(savedTotal))) {
-                totalDays = parseInt(savedTotal);
-            }
-            if (savedRemaining && !isNaN(parseInt(savedRemaining))) {
-                remainingDays = parseInt(savedRemaining);
+            const savedState = JSON.parse(localStorage.getItem('countdownState'));
+            if (savedState) {
+                Object.assign(state, savedState);
+            } else {
+                setTimeout(() => showSettingsModal(), 500);
             }
         }
 
-        // 儲存資料到 localStorage
         function saveData() {
-            localStorage.setItem('totalDays', totalDays);
-            localStorage.setItem('remainingDays', remainingDays);
+            localStorage.setItem('countdownState', JSON.stringify(state));
+        }
+        
+        function triggerHapticFeedback() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }
+        
+        function animateElement(element, value) {
+            if (element.textContent !== String(value)) {
+                element.classList.add('animate-pop');
+                setTimeout(() => {
+                    element.textContent = value;
+                    element.classList.remove('animate-pop');
+                }, 150);
+            }
         }
 
-        // 更新介面
         function updateUI() {
-            const completedDays = totalDays - remainingDays;
-            const percentage = ((totalDays - remainingDays) / totalDays) * 100;
+            const completedDays = state.totalDays - state.remainingDays;
+            const percentage = state.totalDays > 0 ? (completedDays / state.totalDays) * 100 : 0;
             
-            document.getElementById('daysRemaining').textContent = remainingDays;
-            document.getElementById('totalDays').textContent = totalDays;
-            document.getElementById('completedDays').textContent = completedDays;
+            dom.goalTitle.textContent = state.goalName;
             
-            // 更新進度環
-            const circle = document.getElementById('progress');
+            animateElement(dom.daysRemaining, state.remainingDays);
+            animateElement(dom.totalDays, state.totalDays);
+            animateElement(dom.completedDays, completedDays);
+
             const radius = 85;
             const circumference = 2 * Math.PI * radius;
             const offset = circumference - (percentage / 100) * circumference;
+            dom.progress.style.strokeDasharray = `${circumference} ${circumference}`;
+            dom.progress.style.strokeDashoffset = offset;
             
-            circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            circle.style.strokeDashoffset = offset;
+            dom.progressRing.setAttribute('aria-valuenow', completedDays);
+            dom.progressRing.setAttribute('aria-valuemax', state.totalDays);
+
+            dom.increaseBtn.disabled = state.remainingDays === 0;
+            dom.decreaseBtn.disabled = state.remainingDays === state.totalDays;
 
             saveData();
         }
 
-        // 顯示訊息
         function showMessage(text) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.classList.add('show');
+            dom.message.textContent = text;
+            dom.message.classList.add('show');
             setTimeout(() => {
-                messageEl.classList.remove('show');
-            }, 2000);
-        }
-
-        // 創建 confetti pieces
-        function createConfetti() {
-            const celebrationEl = document.getElementById('celebration');
-            celebrationEl.innerHTML = ''; // 清空之前的 confetti
-            const colors = ['#ff6347', '#ffa500', '#32cd32', '#1e90ff', '#ff69b4', '#FF9AA2', '#FFB7B2'];
-            const numPieces = 100; // 增加數量以更華麗
-
-            for (let i = 0; i < numPieces; i++) {
-                const piece = document.createElement('div');
-                piece.classList.add('confetti-piece');
-                piece.style.left = `${Math.random() * 100}%`;
-                piece.style.animationDuration = `${Math.random() * 3 + 2}s`; // 2-5 秒
-                piece.style.animationDelay = `${Math.random() * 1}s`; // 隨機延遲
-                piece.style.width = `${Math.random() * 10 + 5}px`; // 隨機寬度
-                piece.style.height = `${Math.random() * 20 + 10}px`; // 隨機高度
-                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.transform = `rotate(${Math.random() * 360}deg)`; // 初始旋轉
-                celebrationEl.appendChild(piece);
-            }
-        }
-
-        // 顯示慶祝動畫
-        function showCelebration() {
-            createConfetti();
-            const celebrationEl = document.getElementById('celebration');
-            celebrationEl.classList.add('show');
-            setTimeout(() => {
-                celebrationEl.classList.remove('show');
-                celebrationEl.innerHTML = ''; // 清空 confetti
+                dom.message.classList.remove('show');
             }, 3000);
         }
+        
+        function updateQuote() {
+            const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+            dom.goalSubtitle.textContent = motivationalQuotes[randomIndex];
+        }
 
-        // 增加一天
-        document.getElementById('increaseBtn').addEventListener('click', () => {
-            if (remainingDays > 0) {
-                remainingDays--;
+        function showSettingsModal() {
+            dom.goalNameInput.value = state.goalName === '🌸 目標倒數 🌸' ? '' : state.goalName;
+            dom.totalDaysInput.value = state.totalDays;
+            dom.settingsModal.classList.add('show');
+            dom.goalNameInput.focus();
+        }
+
+        function hideSettingsModal() {
+            dom.settingsModal.classList.remove('show');
+        }
+
+        function handleSaveSettings() {
+            const newGoalName = dom.goalNameInput.value.trim();
+            const newTotalDays = parseInt(dom.totalDaysInput.value);
+
+            if (!newGoalName) {
+                showMessage("請給你的目標取個名字吧！");
+                return;
+            }
+            if (isNaN(newTotalDays) || newTotalDays <= 0) {
+                showMessage("總天數必須是正數喔！");
+                return;
+            }
+
+            state.goalName = newGoalName;
+            state.totalDays = newTotalDays;
+            state.remainingDays = newTotalDays;
+            
+            updateUI();
+            updateQuote();
+            hideSettingsModal();
+            showMessage('新目標已設定！加油 💪');
+        }
+
+        dom.increaseBtn.addEventListener('click', () => {
+            if (state.remainingDays > 0) {
+                triggerHapticFeedback();
+                state.remainingDays--;
                 updateUI();
+                updateQuote();
                 
-                if (remainingDays === 0) {
+                if (state.remainingDays === 0) {
                     showCelebration();
-                    showMessage('🎊 恭喜！你完成所有上班日了！');
-                } else if (remainingDays <= 10) {
-                    showMessage(`💪 加油！只剩 ${remainingDays} 天了！`);
+                    showMessage(`🎊 恭喜！你完成了「${state.goalName}」！`);
+                } else if (state.remainingDays <= 10) {
+                    showMessage(`💪 加油！只剩 ${state.remainingDays} 天了！`);
                 } else {
                     showMessage('太棒了！又完成一天 ✨');
                 }
-            } else {
-                showMessage('已經完成所有天數囉！🎉');
             }
         });
 
-        // 減少一天
-        document.getElementById('decreaseBtn').addEventListener('click', () => {
-            if (remainingDays < totalDays) {
-                remainingDays++;
+        dom.decreaseBtn.addEventListener('click', () => {
+            if (state.remainingDays < state.totalDays) {
+                triggerHapticFeedback();
+                state.remainingDays++;
                 updateUI();
                 showMessage('已退回一天 ↩️');
-            } else {
-                showMessage('已經是初始狀態囉！');
             }
         });
-
-        // 重新設定
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm('確定要重新設定嗎？目前的進度將會清除。')) {
-                const newTotal = prompt('請輸入新的總天數：', totalDays);
-                if (newTotal !== null && newTotal.trim() !== '' && !isNaN(newTotal) && parseInt(newTotal) > 0) {
-                    totalDays = parseInt(newTotal);
-                    remainingDays = totalDays;
-                    updateUI();
-                    showMessage('已重新設定！加油 💪');
-                }
+        
+        dom.resetBtn.addEventListener('click', showSettingsModal);
+        dom.saveSettingsBtn.addEventListener('click', handleSaveSettings);
+        dom.cancelSettingsBtn.addEventListener('click', hideSettingsModal);
+        dom.settingsModal.addEventListener('click', (e) => {
+            if (e.target === dom.settingsModal) {
+                hideSettingsModal();
             }
         });
-
-        // 初始化
-        loadData();
-        updateUI();
-
-        // 防止自動滾動
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 0);
-        });
-
-        // PWA 服務工作者註冊
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered', reg))
-                    .catch(err => console.log('Service Worker registration failed', err));
-            });
+        
+        function init() {
+            loadData();
+            updateUI();
+            updateQuote();
         }
+        
+        init();
+
+        function createConfetti() { const el = dom.celebration; el.innerHTML = ''; const colors = ['#ff6347', '#ffa500', '#32cd32', '#1e90ff', '#ff69b4', '#FF9AA2', '#FFB7B2', '#FFD700', '#C0C0C0']; const numPieces = 150; for (let i = 0; i < numPieces; i++) { const piece = document.createElement('div'); piece.classList.add('confetti-piece'); piece.style.left = `${Math.random() * 100}%`; const duration = Math.random() * 3 + 2; piece.style.animationDuration = `${duration}s`; piece.style.animationDelay = `${Math.random() * 1}s`; piece.style.width = `${Math.random() * 10 + 5}px`; piece.style.height = `${Math.random() * 20 + 10}px`; piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0'; piece.style.setProperty('--rotation', `${Math.random() * 720 + 360}deg`); el.appendChild(piece); } }
+        function showCelebration() { createConfetti(); dom.celebration.classList.add('show'); setTimeout(() => { dom.celebration.classList.remove('show'); dom.celebration.innerHTML = ''; }, 4000); }
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').then(reg => console.log('Service Worker registered', reg)).catch(err => console.log('Service Worker registration failed', err)); }); }
     </script>
 </body>
 </html>
