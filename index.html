@@ -127,7 +127,7 @@
         
         <div class="celebration-screen" id="celebrationScreen">
             <div class="icon">🎉</div>
-            <div class="title">太棒了！目標達成！</div>
+            <div class="title">可以回台中了！</div>
             <div class="subtitle" id="celebrationSubtitle"></div>
             <button class="btn btn-primary" id="startNewGoalBtn">開啟我的下一個目標！</button>
         </div>
@@ -135,8 +135,8 @@
     
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
-            <div class="modal-title">設定你的新目標</div>
-            <div class="form-group"><label for="goalNameInput">目標名稱</label><input type="text" id="goalNameInput" placeholder="例如：PMP 考試倒數"></div>
+            <div class="modal-title">設定一個目標</div>
+            <div class="form-group"><label for="goalNameInput">目標名稱</label><input type="text" id="goalNameInput" placeholder="例如：離開傷心的台北"></div>
             <div class="form-group"><label for="totalDaysInput">總共天數</label><input type="number" id="totalDaysInput" placeholder="例如：30" min="1"></div>
             <div class="form-group">
                 <label>選擇色彩主題</label>
@@ -169,7 +169,24 @@
         
         // ✨ 移除 motivationalQuotes 陣列
         
-        const dailyCompletionMessages = [ '太棒了！又完成一天 ✨', '離目標又更近一步了！🚀', '今天的努力，成就明天的你。', '堅持下去，你做得很好！👍', '又累積了一天的進度，真了不起！', '為今天的自己喝采！👏' ];
+        const dailyCompletionMessages = [
+        '太棒了！又完成一天 ✨',
+        '離目標又更近一步了！🚀',
+        '今天的努力，成就明天的妳。',
+        '堅持下去，妳做得很好了！👍',
+        '又累積了一天的進度，真了不起！',
+        '為今天的自己喝采！👏',
+        '辛苦了寶寶，妳真的很努力，我都看在眼裡 ❤️',
+        '再忙也別忘了喘口氣，我希望妳每天都能被溫柔對待 💕',
+        '不管多累，都有我在這裡給妳擁抱與力量 🤗',
+        '妳的努力讓我心疼，也讓我更愛妳 🌷',
+        '今天又是妳閃閃發光的一天，能跟妳在一起，我好幸福 ✨',
+        '妳不只是為夢想努力，也讓我每天更相信愛 💖',
+        '如果今天有點難，那就靠在我心裡休息一下吧 🫶',
+        '每次想到妳在努力，我都覺得世界變得更溫柔 🌼',
+        '妳不需要完美，因為在我眼裡妳早就很了不起了 💫',
+        '謝謝妳一直那麼努力，也謝謝妳讓我能這麼愛妳 ❤️'
+        ];
         
         function applyTheme(themeName) {
             state.theme = themeName; const root = document.documentElement;
@@ -202,7 +219,12 @@
             saveData();
         }
 
-        function showMessage(text) { dom.message.textContent = text; dom.message.classList.add('show'); setTimeout(() => { dom.message.classList.remove('show'); }, 3000); }
+        function showMessage(text) { 
+            dom.message.textContent = text; 
+            dom.message.classList.add('show'); 
+            clearTimeout(dom._messageTimer); 
+            dom._messageTimer = setTimeout(() => { dom.message.classList.remove('show'); }, 3000); 
+        }
         
         // ✨ 移除 updateQuote 函式
         
